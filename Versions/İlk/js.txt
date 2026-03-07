@@ -1,0 +1,86 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const intro = document.getElementById('introOverlay');
+  const startBtn = document.getElementById('startBtn');
+  const bgAudio = document.getElementById('bgAudio');
+  const htlAudio = document.getElementById('htlAudio');
+  const musicToggle = document.getElementById('musicToggle');
+  const confettiBtn = document.getElementById('confettiBtn');
+  const countdownBtn = document.getElementById('countdownBtn');
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const messageCard = document.getElementById('messageCard');
+  const countdownPanel = document.getElementById('countdownPanel');
+  const countdownDisplay = document.getElementById('countdownDisplay');
+  const roseHand = document.getElementById('roseHand');
+
+  let musicPlaying = false;
+  let crossfadeActive = false;
+
+  function crossfade(fromAudio, toAudio, duration = 4000){
+    if(crossfadeActive) return;
+    crossfadeActive = true;
+    const steps = 30;
+    const stepTime = duration / steps;
+    let i = 0;
+    toAudio.play();
+    const fadeInterval = setInterval(()=>{
+      i++;
+      const progress = i / steps;
+      fromAudio.volume = Math.max(0, 1 - progress);
+      toAudio.volume = Math.min(1, progress);
+      if(i>=steps){
+        clearInterval(fadeInterval);
+        fromAudio.pause();
+        crossfadeActive = false;
+      }
+    }, stepTime);
+  }
+
+  startBtn.addEventListener('click', () => {
+    intro.style.display = 'none';
+    bgAudio.play().then(()=>{ musicPlaying=true; musicToggle.textContent='⏸ Müzik Durdur'; }).catch(()=>{});
+    startConfettiBurst(8000);
+    setTimeout(()=>{ roseHand.classList.add('show'); }, 2000);
+    setTimeout(()=>{ roseHand.classList.remove('show'); }, 8000);
+  });
+
+  musicToggle.addEventListener('click', ()=>{
+    if(!musicPlaying){
+      bgAudio.play();
+      musicPlaying=true;
+      musicToggle.textContent='⏸ Müzik Durdur';
+    } else {
+      crossfade(bgAudio, htlAudio, 4000);
+      musicPlaying=false;
+      musicToggle.textContent='🎵 Karışık Müzik Çal';
+    }
+  });
+
+  // Confetti
+  const ctx = confettiCanvas.getContext('2d');
+  let W = confettiCanvas.width = innerWidth;
+  let H = confettiCanvas.height = innerHeight;
+  window.addEventListener('resize', ()=>{ W = confettiCanvas.width = innerWidth; H = confettiCanvas.height = innerHeight; });
+  const confettiPieces = [];
+  function randomColor(){ const r = Math.random(); if(r<0.3) return '#2fb07a'; if(r<0.6) return '#ff4f7b'; return `hsl(${Math.random()*360}, 75%, 70%)`; }
+  function spawnConfetti(n=100){ for(let i=0;i<n;i++){ confettiPieces.push({ x: Math.random()*W, y:-20, w:Math.random()*8+4, h:Math.random()*12+6, c:randomColor(), s:Math.random()*2+2, r:Math.random()*Math.PI*2 }); } }
+  function updateConfetti(){ ctx.clearRect(0,0,W,H); confettiPieces.forEach((p,idx)=>{ p.y+=p.s; p.x+=Math.sin(p.r)*2; p.r+=0.02; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.w,p.h); if(p.y>H) confettiPieces.splice(idx,1); }); if(confettiPieces.length>0) requestAnimationFrame(updateConfetti); }
+  function startConfettiBurst(duration=5000){ spawnConfetti(150); updateConfetti(); const interval=setInterval(()=>spawnConfetti(40),800); setTimeout(()=>clearInterval(interval),duration); }
+  confettiBtn.addEventListener('click', ()=>startConfettiBurst(6000));
+
+  // Geri sayım
+  countdownBtn.addEventListener('click', ()=>{
+    countdownPanel.classList.remove('hidden');
+    let count = 10;
+    countdownDisplay.textContent = count;
+    const interval = setInterval(()=>{
+      count--;
+      countdownDisplay.textContent = count>0 ? count : '🎉 Sürpriz Zamanı!';
+      if(count<=0){
+        clearInterval(interval);
+        messageCard.style.background='linear-gradient(90deg, #2fb07a, #ff4f7b)';
+        messageCard.style.transform='scale(1.05)';
+        startConfettiBurst(7000);
+      }
+    },1000);
+  });
+});

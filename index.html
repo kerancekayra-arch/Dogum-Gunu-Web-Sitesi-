@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🎉 Doğum Günün Kutlu Olsun — CAAULAAAA</title>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navigasyon Okları -->
+  <button id="prevPage" class="nav-btn left-nav" aria-label="Önceki Sayfa">❮</button>
+  <button id="nextPage" class="nav-btn right-nav" aria-label="Sonraki Sayfa">❯</button>
+
+  <div id="pageContainer">
+    <!-- Sayfa 1: Ana Kutlama -->
+    <section id="page1" class="page active">
+      <main class="container">
+        <header class="hero">
+          <div class="hero-text">
+            <h1 class="title">🎂 Doğum Günün Kutlu Olsun, <span id="personName" class="neon">CAULAA</span>!</h1>
+            <p class="subtitle">Bugün senin günün — sevgi, sürpriz ve bol kahkaha dolu olsun.</p>
+
+            <div class="controls">
+              <button id="musicToggle" class="btn action">Müziği Başlat</button>
+            <!--  <button id="lyricsSyncBtn" class="btn action outline">Lyrics Senkron</button> -->
+              <button id="confettiBtn" class="btn action outline">🎊 Konfeti Patlat</button>
+              <button id="countdownBtn" class="btn action outline">⏳ Geri Sayım</button>
+              <button id="megaHeartBtn" class="btn action outline">❤️ Dev Kalp</button>
+            </div>
+
+            <div class="message-card" id="messageCard">
+              <h3>Mesajın</h3>
+              <p id="messageText">CAULA Abla, yeni yaşında sağlık, mutluluk ve başarılar seninle olsun! 🎈</p>
+            </div>
+          </div>
+        </header>
+
+        <section id="countdownPanel" class="countdown hidden" aria-hidden="true">
+          <div class="countdown-inner">
+            <h3>Geri Sayım</h3>
+            <div id="countdownDisplay" class="countdown-display">10</div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <!-- Sayfa 2: Fotoğraf Galerisi -->
+    <section id="page2" class="page">
+      <div class="container">
+        <h2 class="section-title">Anılar & Fotoğraflar</h2>
+        <div class="photo-grid" id="photoGrid">
+          <!-- Fotoğraflar buraya JS ile veya manuel gelecek -->
+          <div class="photo-item"><img src="assets/images/donas-doner-tavuk-durum-c-1.webp" alt="Anı 1"></div>
+          <div class="photo-item"><img src="assets/images/prit.jpg" alt="Anı 2"></div>
+          <div class="photo-item"><img src="assets/images/portakal suyu.jpg" alt="Anı 3"></div>
+          <div class="photo-item"><img src="assets/images/mavi.webp" alt="Anı 4"></div>
+          <div class="photo-item"><img src="assets/images/profiterol.jpg" alt="Anı 5"></div>
+          <div class="photo-item"><img src="assets/images/magnolia.jpg" alt="Anı 6"></div>
+          <div class="photo-item"><img src="assets/images/whatsapp konusması.jpeg" alt="Anı 7"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sayfa 3: Kelime Listesi -->
+    <section id="page3" class="page">
+      <div class="container">
+        <h2 class="section-title">Seni Anlatan Kelimeler</h2>
+        <div class="word-cloud" id="wordList">
+          <!-- Kelimeler buraya gelecek -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Sayfa 4: İnteraktif Apple Jack -->
+    <section id="page4" class="page">
+      <div class="container applejack-interactive-container">
+        <h2 class="section-title">Apple Jack & Cak Cak Cak Kirpi </h2>
+        <div class="interactive-area">
+          <div id="interactiveAppleJack" class="applejack-wrapper">
+            <img id="applejackInteractiveImg" src="assets/images/applejacktombik2.png" alt="Applejack">
+          </div>
+          <div id="interactiveHedgehog" class="hedgehog-wrapper">
+            <img src="assets/images/Kirpii.png" alt="Hedgehog" class="hedgehog-animated">
+          </div>
+        </div>
+        <p class="hint">Apple Jack'e basmayı dene! ✨</p>
+      </div>
+
+      <!-- Gizli Mesaj Paneli -->
+      <div id="secretMessagePanel" class="secret-panel hidden">
+        <div class="secret-content">
+          <h2>🔒 Gizli Mesajın Kilidini Açtın</h2>
+          <p id="secretText">bişeyler yaz ben sonra değiştireceğim</p>
+          <button id="closeSecretBtn" class="btn action">Kapat</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sayfa 5: Pat Pat Jack -->
+    <section id="page5" class="page">
+      <div class="container patpat-container">
+        <h2 class="section-title">Pat Pat Jack</h2>
+        <div class="patpat-area">
+          <div id="patPatJackWrapper" class="patpat-wrapper">
+            <img id="patPatJackImg" src="assets/images/applejacktombik2.png" alt="Pat Pat Jack" class="patpat-static">
+          </div>
+        </div>
+        <p class="hint">Apple Jack'e basılı tut! 👋</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 6: YIPPEE Sayfası -->
+    <section id="page6" class="page">
+      <div class="container yippee-container">
+        <h2 class="section-title">YIPPEEEEEEEEEEEEEE! 🎉</h2>
+        <div class="interactive-area" style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
+          <iframe width="110" height="200" src="https://www.myinstants.com/instant/yippeeeeeeeeeeeeee-34261/embed/" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <p class="hint">Butona bas ve enerjiyi hisset! ✨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 7: Muhtisim İkili (Kamera) -->
+    <section id="page7" class="page">
+      <div class="container camera-container">
+        <h2 class="section-title">Anı Yakala! 📸</h2>
+        
+        <div id="cameraArea" class="camera-area">
+          <video id="webcam" autoplay playsinline class="webcam-view"></video>
+          <div class="camera-controls">
+            <button id="startCameraBtn" class="btn action">Kamerayı Başlat</button>
+            <button id="captureBtn" class="btn action hidden">Fotoğraf Çek</button>
+          </div>
+        </div>
+
+        <canvas id="photoCanvas" style="display:none;"></canvas>
+
+        <div id="cameraResult" class="camera-result hidden">
+          <h3 class="muhtisim-title">Muhtisim İkili</h3>
+          <div class="result-images">
+            <div class="result-img-wrapper">
+              <img id="capturedPhoto" src="" alt="Sen">
+              <span>Sen</span>
+            </div>
+            
+            <div class="character-switcher">
+              <button id="prevChar" class="char-nav-btn">❮</button>
+              <div class="result-img-wrapper">
+                <img id="resultCharImg" src="assets/images/applejacktombik2.png" alt="Karakter">
+                <span id="resultCharName">Tombik Jack</span>
+              </div>
+              <button id="nextChar" class="char-nav-btn">❯</button>
+            </div>
+          </div>
+          <button id="retakeBtn" class="btn outline" style="margin-top: 20px;">Tekrar Çek</button>
+        </div>
+        
+        <p class="hint">Kamera izni vermeyi unutma! ✨</p>
+      </div>
+    </section>
+  </div>
+
+  <div id="introOverlay" class="overlay">
+    <div class="overlay-inner">
+      <h1>🎉 Hazır mısın?</h1>
+      <p>Tabuk döner'in doğum günü için sürpriz başlıyor — tıklayın ve kutlama başlasın!</p>
+      <button id="startBtn" class="btn primary">Kutlamayı Başlat</button>
+    </div>
+  </div>
+
+  <!-- Gül animasyonu -->
+  <img src="assets/images/rose2.png" id="roseHand" alt="Kırmızı Gül" />
+
+  <!-- Dekoratif köşe görselleri -->
+  <img src="assets/images/pink-flower-bg.png" class="decor decor-top-left" alt="Pembe Çiçek" />
+  <img src="assets/images/donas-doner-tavuk-durum-c-1.webp" class="decor decor-bottom-right" alt="Desenli Arka Plan" />
+
+  <!-- Büyük sayı overlay -->
+  <div id="bigCountOverlay" aria-hidden="true"></div>
+  <div id="lyricsOverlay" aria-hidden="true"></div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas" class="confetti"></canvas>
+
+  <!-- Efekt container'ları -->
+  <div id="goldRing"></div>
+  <div id="heartRain"></div>
+  <div id="rainbowFlash"></div>
+  <div id="doveContainer"></div>
+  <div id="megaHeartContainer"></div>
+
+  <!-- Lightbox (Galeri Büyütme) -->
+  <div id="lightbox" class="lightbox hidden">
+    <span class="lightbox-close">&times;</span>
+    <button class="lightbox-nav lightbox-prev">❮</button>
+    <div class="lightbox-content">
+      <img id="lightboxImg" src="" alt="Büyütülmüş Görsel">
+    </div>
+    <button class="lightbox-nav lightbox-next">❯</button>
+  </div>
+
+  <!-- Koşan Pony (Siyah silme için CSS Blend Mode kullanıldı) -->
+  <video id="ponyVideo" src="assets/images/applejack.mp4" playsinline muted loop class="pony-video"></video>
+
+  <!-- Ses: dosya yolları -->
+  <audio id="partyAudio" preload="auto" loop src="assets/audio/ACDC - Highway to Hell (Official Video).mp3"></audio>
+  <!-- rockAudio bırakıldı ama kullanılmıyor; istersen ileride crossfade ekleriz -->
+  <audio id="rockAudio" preload="auto" src="assets/audio/ACDC - Highway to Hell (Official Video).mp3"></audio>
+  <audio id="clickAudio" preload="auto" src="assets/audio/Buton tıklama sesi.mp3"></audio>
+  <audio id="ajAudio" preload="auto" src="assets/audio/Apple%20Jack%20ses%202.mp3"></audio>
+  <audio id="hedgehogAudio" preload="auto" src="assets/audio/Kirpi%20ses%20efekti.mp3"></audio>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+:root {
+  --bg: #121212;
+  --mars-green: #2fb07a;
+  --accent-pink: #ff4f7b;
+  --muted: #bdbdbd;
+  --card: rgba(255,255,255,0.03);
+  --radius: 14px;
+}
+
+/* ---------- Genel ---------- */
+* { box-sizing: border-box; }
+html, body { height:100%; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:#fff; overflow-x:hidden; }
+.container { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+
+/* Overlay */
+.overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.8)); z-index: 20000; backdrop-filter: blur(4px); }
+.overlay-inner { text-align: center; background: rgba(255,255,255,0.04); padding: 36px; border-radius: 16px; }
+.overlay-inner h1 { font-family: 'Pacifico', cursive; font-size: 44px; margin:0 0 12px; color: var(--mars-green); }
+.overlay-inner p { margin:0 0 18px; color:var(--muted); }
+
+/* Buttons */
+.btn { border: none; border-radius: 10px; padding: 12px 18px; cursor: pointer; font-family:'Montserrat',sans-serif; font-weight:700 }
+.btn.primary { background:linear-gradient(90deg,var(--mars-green),#36c089); color:#05120a }
+.btn.action { background:linear-gradient(90deg,var(--mars-green),#36c089); color:#05120a; box-shadow:0 8px 20px rgba(47,176,122,0.12) }
+.btn.outline { background: transparent; border:1px solid rgba(255,255,255,0.06); color: #fff }
+
+/* Hero + title */
+.hero{ text-align:center; margin-top:60px; }
+.title{ font-family:'Pacifico',cursive; font-size:40px; margin-bottom:8px; color:var(--mars-green) }
+.subtitle{ color:var(--muted); font-size:16px }
+.controls{ margin:24px 0; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+/* neon 3D name */
+.neon {
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  text-shadow:
+    0 0 6px rgba(47,176,122,0.12),
+    0 0 12px rgba(47,176,122,0.10),
+    0 0 20px rgba(255,79,123,0.06),
+    0 2px 0 rgba(0,0,0,0.6);
+  animation: neonGlow 2.8s ease-in-out infinite;
+}
+@keyframes neonGlow {
+  0%,100% { text-shadow: 0 0 4px rgba(47,176,122,0.08), 0 0 10px rgba(47,176,122,0.06), 0 0 16px rgba(255,79,123,0.03); }
+  50% { text-shadow: 0 0 12px rgba(47,176,122,0.45), 0 0 24px rgba(47,176,122,0.25), 0 0 36px rgba(255,79,123,0.12); }
+}
+
+/* Message card */
+.message-card{ background:var(--card); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); max-width:600px; margin:0 auto; transition: transform .25s, background .4s; }
+.message-card h3{ margin:0 0 6px; font-size:16px; color:var(--muted) }
+.message-card p{ margin:0; font-size:16px; color:#f5f5f5 }
+
+/* Countdown (normal) */
+.countdown{ margin-top:24px; padding:18px; border-radius:12px; background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); text-align:center }
+.countdown.hidden{ display:none; }
+.countdown-display{ font-weight:700; margin:12px 0; color:#ffffff; font-size:24px; transition: transform .4s, opacity .4s }
+
+/* ---------- BÜYÜK SAYI OVERLAY ---------- */
+#bigCountOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 21000;
+}
+.big-num {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 140px;
+  color: #ffffff;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.7), 0 0 28px rgba(255,79,123,0.06);
+  transform: scale(0.4) translateY(20px);
+  opacity: 0;
+  filter: blur(6px);
+  animation: bigNumInOut 1100ms cubic-bezier(.22,.9,.2,1) forwards;
+}
+@keyframes bigNumInOut {
+  0% { transform: scale(0.4) translateY(20px); opacity: 0; filter: blur(6px) }
+  30% { transform: scale(1.08) translateY(-6px); opacity: 1; filter: blur(0) }
+  70% { transform: scale(0.96) translateY(-2px); opacity: 0.9 }
+  100% { transform: scale(0.8) translateY(-40px); opacity: 0; filter: blur(6px) }
+}
+
+/* Confetti canvas */
+.confetti { position: fixed; inset:0; pointer-events:none; z-index: 15000 }
+
+/* Effect styles (gold ring, heart rain, rainbow, dove) */
+#goldRing{ position: fixed; top:50%; left:50%; transform: translate(-50%,-50%); z-index:16000; pointer-events:none; width:0; height:0; opacity:0; border-radius:50% }
+#goldRing.active{ animation: goldRingAnim 1.6s ease-out forwards }
+@keyframes goldRingAnim{ 0%{width:0;height:0;opacity:1;box-shadow:0 0 20px gold}50%{width:240px;height:240px;box-shadow:0 0 45px gold}100%{width:380px;height:380px;opacity:0;box-shadow:0 0 80px gold} }
+
+#heartRain{ position: fixed; inset:0; pointer-events:none; z-index:15005 }
+.rainHeart{ position:absolute; width:16px; height:16px; background:#ff4f7b; transform:rotate(45deg); border-radius:3px; opacity:0.95; animation: heartRainAnim 4s linear forwards }
+.rainHeart:before,.rainHeart:after{ content:""; position:absolute; width:16px; height:16px; background:#ff4f7b; border-radius:50% }
+.rainHeart:before{ left:0; top:-8px } .rainHeart:after{ left:-8px; top:0 }
+@keyframes heartRainAnim{ from{ transform: translateY(-40px) rotate(45deg); opacity:1 } to{ transform: translateY(120vh) rotate(45deg); opacity:0 } }
+
+#rainbowFlash{ position: fixed; inset:0; z-index:16000; pointer-events:none; opacity:0; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet) }
+#rainbowFlash.active{ animation: rainbowFlashAnim 1s ease-out forwards }
+@keyframes rainbowFlashAnim { 0%{opacity:0}30%{opacity:0.6}100%{opacity:0} }
+
+#doveContainer{ position: fixed; bottom:10%; left:-200px; z-index:16000; pointer-events:none }
+.dove{ width:120px; animation: doveFly 6s linear forwards }
+@keyframes doveFly{ from{ transform: translateX(0) translateY(0); opacity:1 } to{ transform: translateX(140vw) translateY(-40vh); opacity:0 } }
+
+/* Mega Heart */
+#megaHeartContainer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 20000;
+}
+.mega-heart {
+  width: 300px;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.2);
+  filter: drop-shadow(0 0 30px rgba(255, 79, 123, 0.6));
+  animation: megaHeartAnim 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes megaHeartAnim {
+  0% { transform: scale(0.2); opacity: 0; }
+  30% { transform: scale(1.2); opacity: 1; }
+  80% { transform: scale(1.0); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Rose + decor */
+#roseHand{ position: fixed; right:-250px; bottom:20%; width:200px; pointer-events:none; z-index:12000; transition: right 1.2s ease-out, transform 0.3s ease }
+#roseHand.show{ right:20px; transform:scale(1.0) }
+.decor{ position: fixed; width:200px; opacity:0.12; pointer-events:none; z-index:11000 }
+.decor-top-left{ top:0; left:0; transform: rotate(-15deg) }
+.decor-bottom-right{ bottom:0; right:0; transform: rotate(10deg) }
+
+/* Koşan Pony (Siyah silme için CSS Blend Mode kullanıldı) */
+.pony-video {
+  position: fixed;
+  bottom: 20px;
+  left: -350px; 
+  width: 250px; 
+  height: auto;
+  z-index: 18000;
+  pointer-events: none;
+  mix-blend-mode: screen; /* Siyah arka planı yok eder! */
+  opacity: 0; /* Başlangıçta görünmesin */
+  transition: opacity 0.3s ease;
+}
+
+.pony-video.active {
+  opacity: 1;
+}
+
+.pony-animate {
+  animation: ponyWalkAcross 6s linear forwards;
+}
+
+@keyframes ponyWalkAcross {
+  0% { left: -350px; }
+  100% { left: 110vw; }
+}
+
+/* --- SAYFA YAPISI (SPA) --- */
+#pageContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none; /* Varsayılan kapalı */
+  overflow-y: auto;
+  background: transparent;
+  transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.6s ease;
+}
+
+.page.active {
+  display: block; /* Flex yerine block yaparak orijinal container yapısını koruyalım */
+  opacity: 1;
+  z-index: 10;
+}
+
+/* Sayfa 2, 3, 4, 5, 6 ve 7 için özel ortalama (Page 1 hariç) */
+#page2.active, #page3.active, #page4.active, #page5.active, #page6.active, #page7.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Sayfa Geçiş Animasyonları */
+.page.slide-out-left { transform: translateX(-100%); opacity: 0; }
+.page.slide-out-right { transform: translateX(100%); opacity: 0; }
+.page.slide-in-right { transform: translateX(100%); opacity: 0; }
+.page.slide-in-left { transform: translateX(-100%); opacity: 0; }
+
+/* Navigasyon Okları */
+.nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 20px 15px;
+  cursor: pointer;
+  z-index: 1000;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-nav { left: 20px; }
+.right-nav { right: 20px; }
+
+/* Sayfa 2: Fotoğraf Galerisi */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 30px;
+}
+
+.photo-item {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+  background: white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.photo-item:hover {
+  transform: rotate(3deg) scale(1.05);
+}
+
+.photo-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Sayfa 3: Kelime Listesi */
+.word-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  max-width: 800px;
+}
+
+.word-tag {
+  background: white;
+  color: #ff4f7b;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Sayfa 4: İnteraktif Apple Jack */
+.interactive-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px; /* Aradaki boşluğu biraz açalım */
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.applejack-wrapper {
+  width: 250px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  user-select: none;
+  animation: applejackBob 3s ease-in-out infinite; /* Sürekli oynasın */
+}
+
+@keyframes applejackBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hedgehog-wrapper {
+  width: 150px;
+  height: auto;
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.hedgehog-wrapper:active {
+  transform: scale(0.9) translateY(5px);
+}
+
+.hedgehog-animated {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: hedgehogFloat 2s ease-in-out infinite;
+}
+
+@keyframes hedgehogFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.applejack-wrapper:active {
+  transform: scale(0.9) translateY(5px);
+  animation: none; /* Basıldığında animasyonu durdur ki göçme efekti net olsun */
+}
+
+.applejack-wrapper img {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+/* Sayfa 5: Pat Pat Jack */
+.patpat-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 400px;
+}
+
+.patpat-wrapper {
+  width: 300px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.1s ease;
+}
+
+.patpat-wrapper img {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+/* Sayfa 7: Kamera Bölümü */
+.camera-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.webcam-view {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  background: #000;
+  transform: scaleX(-1); /* Ayna efekti */
+}
+
+.camera-controls {
+  display: flex;
+  gap: 15px;
+}
+
+.camera-result {
+  text-align: center;
+  animation: scaleUp 0.5s ease;
+}
+
+.muhtisim-title {
+  font-family: 'Pacifico', cursive;
+  font-size: 2.5rem;
+  color: var(--mars-green);
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(47,176,122,0.3);
+}
+
+.result-images {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.character-switcher {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.char-nav-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.char-nav-btn:hover {
+  background: var(--mars-green);
+  color: #000;
+  transform: scale(1.1);
+}
+
+.result-img-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-img-wrapper img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 4px solid white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#capturedPhoto {
+  transform: scaleX(-1); /* Ayna efekti */
+}
+
+.result-img-wrapper span {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hint {
+  color: white;
+  margin-top: 20px;
+  font-style: italic;
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* Gizli Mesaj Paneli */
+.secret-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 30000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.5s ease;
+}
+
+.secret-panel.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* --- LIGHTBOX (GALERİ BÜYÜTME) --- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 40000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.4s ease;
+}
+
+.lightbox.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  animation: lightboxFadeIn 0.3s ease-out;
+}
+
+@keyframes lightboxFadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 40001;
+  transition: color 0.3s ease;
+}
+
+.lightbox-close:hover {
+  color: #ff4f7b;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 3rem;
+  padding: 20px;
+  cursor: pointer;
+  z-index: 40001;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-prev { left: 40px; }
+.lightbox-next { right: 40px; }
+
+@media (max-width: 768px) {
+  .lightbox-nav { font-size: 2rem; padding: 10px; }
+  .lightbox-prev { left: 10px; }
+  .lightbox-next { right: 10px; }
+  .lightbox-close { top: 15px; right: 20px; font-size: 40px; }
+}
+
+.secret-content {
+  background: linear-gradient(135deg, #ff4f7b, #2fb07a);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+  max-width: 90%;
+  width: 400px;
+  animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.secret-content h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.secret-content p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+  @media (max-width:980px){
+    .title{ font-size: 32px }
+    #roseHand{ width:140px; bottom:8% }
+    .big-num { font-size: 72px; }
+  }
+  #lyricsOverlay{ position: fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:22000; pointer-events:none }
+  .lyric-line{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:56px; color:#fff; text-shadow:0 6px 28px rgba(0,0,0,0.6), 0 0 24px rgba(255,79,123,0.08); opacity:0 }
+  .lyric-char{ display:inline-block; opacity:0; transform: translateY(0) scale(1); transition: opacity .18s ease, transform .06s ease }
+  .lyric-char.on{ opacity:1; transform: translateY(var(--beatY, 0px)) }
+  .lyricsSide{ position: fixed; top: 40%; width: 46%; pointer-events:none }
+  .lyricsSide.left{ left: 4%; text-align:left }
+  .lyricsSide.right{ right: 4%; text-align:right }
+  .lyric-word{ display:inline-flex; gap:0.02em; margin-right:0.4em }
+  .slide-in-left{ animation: sil 500ms ease forwards }
+  .slide-in-right{ animation: sir 500ms ease forwards }
+  @keyframes sil { from{ transform: translateX(-40px); opacity:0 } to{ transform: translateX(0); opacity:1 } }
+  @keyframes sir { from{ transform: translateX(40px); opacity:0 } to{ transform: translateX(0); opacity:1 } }
+  @media (max-width:980px){ .lyric-line{ font-size:34px } }

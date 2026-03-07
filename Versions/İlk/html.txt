@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🎉 Doğum Günün Kutlu Olsun — Ahmet</title>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Intro overlay -->
+  <div id="introOverlay" class="overlay">
+    <div class="overlay-inner">
+      <h1>🎉 Hazır mısın?</h1>
+      <p>Ahmet'in doğum günü için sürpriz başlıyor — tıklayın ve kutlama başlasın!</p>
+      <button id="startBtn" class="btn primary">Kutlamayı Başlat</button>
+    </div>
+  </div>
+
+  <!-- Gül animasyonu -->
+  <img src="assets/images/rose2.png" id="roseHand" alt="Kırmızı Gül" />
+
+  <!-- Dekoratif köşe görselleri -->
+  <img src="assets/images/pink-flower-bg.png" class="decor decor-top-left" alt="Pembe Çiçek" />
+  <img src="assets/images/pink-flower-bg.png" class="decor decor-bottom-right" alt="Pembe Çiçek" />
+
+  <main class="container">
+    <header class="hero">
+      <div class="hero-text">
+        <h1 class="title">🎂 Doğum Günün Kutlu Olsun, <span id="personName">Ahmet</span>!</h1>
+        <p class="subtitle">Bugün senin günün — sevgi, sürpriz ve bol kahkaha dolu olsun.</p>
+
+        <div class="controls">
+          <button id="musicToggle" class="btn action">🎵 Karışık Müzik Çal</button>
+          <button id="confettiBtn" class="btn action outline">🎊 Konfeti Patlat</button>
+          <button id="countdownBtn" class="btn action outline">⏳ Geri Sayım</button>
+          <button id="megaHeartBtn" class="btn action outline">❤️ Dev Kalp</button>
+        </div>
+
+        <div class="message-card" id="messageCard">
+          <h3>Mesajın</h3>
+          <p id="messageText">Ahmet, yeni yaşında sağlık, mutluluk ve başarılar seninle olsun! 🎈</p>
+        </div>
+      </div>
+    </header>
+
+    <section id="countdownPanel" class="countdown hidden" aria-hidden="true">
+      <div class="countdown-inner">
+        <h3>Geri Sayım</h3>
+        <div id="countdownDisplay" class="countdown-display">10</div>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="confettiCanvas" class="confetti"></canvas>
+
+  <!-- Müzikler -->
+  <audio id="partyAudio" preload="auto" loop src="assets/audio/party-loop.mp3"></audio>
+  <audio id="rockAudio" preload="auto" src="assets/audio/highway-to-hell.mp3"></audio>
+
+  <!-- Efekt containerları -->
+  <div id="megaHeart"></div>
+  <div id="sparkles"></div>
+  <canvas id="fireworksCanvas"></canvas>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
