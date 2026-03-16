@@ -1,14 +1,18 @@
 <!doctype html>
 <html lang="tr">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>🎉 Doğum Günün Kutlu Olsun — CAAULAAAA</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Pacifico&family=Poppins:wght@300;400;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <!-- Navigasyon Okları -->
   <button id="prevPage" class="nav-btn left-nav" aria-label="Önceki Sayfa">❮</button>
@@ -25,7 +29,7 @@
 
             <div class="controls">
               <button id="musicToggle" class="btn action">Müziği Başlat</button>
-            <!--  <button id="lyricsSyncBtn" class="btn action outline">Lyrics Senkron</button> -->
+              <!--  <button id="lyricsSyncBtn" class="btn action outline">Lyrics Senkron</button> -->
               <button id="confettiBtn" class="btn action outline">🎊 Konfeti Patlat</button>
               <button id="countdownBtn" class="btn action outline">⏳ Geri Sayım</button>
               <button id="megaHeartBtn" class="btn action outline">❤️ Dev Kalp</button>
@@ -53,13 +57,14 @@
         <h2 class="section-title">Anılar & Fotoğraflar</h2>
         <div class="photo-grid" id="photoGrid">
           <!-- Fotoğraflar buraya JS ile veya manuel gelecek -->
-          <div class="photo-item"><img src="assets/images/donas-doner-tavuk-durum-c-1.webp" alt="Anı 1"></div>
-          <div class="photo-item"><img src="assets/images/prit.jpg" alt="Anı 2"></div>
-          <div class="photo-item"><img src="assets/images/portakal suyu.jpg" alt="Anı 3"></div>
-          <div class="photo-item"><img src="assets/images/mavi.webp" alt="Anı 4"></div>
-          <div class="photo-item"><img src="assets/images/profiterol.jpg" alt="Anı 5"></div>
-          <div class="photo-item"><img src="assets/images/magnolia.jpg" alt="Anı 6"></div>
-          <div class="photo-item"><img src="assets/images/whatsapp konusması.jpeg" alt="Anı 7"></div>
+          <div class="photo-item"><img src="assets/images/donas-doner-tavuk-durum-c-1.webp" alt="Anı 1" loading="lazy">
+          </div>
+          <div class="photo-item"><img src="assets/images/prit.jpg" alt="Anı 2" loading="lazy"></div>
+          <div class="photo-item"><img src="assets/images/portakal suyu.jpg" alt="Anı 3" loading="lazy"></div>
+          <div class="photo-item"><img src="assets/images/mavi.webp" alt="Anı 4" loading="lazy"></div>
+          <div class="photo-item"><img src="assets/images/profiterol.jpg" alt="Anı 5" loading="lazy"></div>
+          <div class="photo-item"><img src="assets/images/magnolia.webp" alt="Anı 6" loading="lazy"></div>
+          <div class="photo-item"><img src="assets/images/whatsapp konusması.jpeg" alt="Anı 7" loading="lazy"></div>
         </div>
       </div>
     </section>
@@ -83,7 +88,7 @@
             <img id="applejackInteractiveImg" src="assets/images/applejacktombik2.png" alt="Applejack">
           </div>
           <div id="interactiveHedgehog" class="hedgehog-wrapper">
-            <img src="assets/images/Kirpii.png" alt="Hedgehog" class="hedgehog-animated">
+            <img src="assets/images/Kirpii.webp" alt="Hedgehog" class="hedgehog-animated">
           </div>
         </div>
         <p class="hint">Apple Jack'e basmayı dene! ✨</p>
@@ -93,7 +98,10 @@
       <div id="secretMessagePanel" class="secret-panel hidden">
         <div class="secret-content">
           <h2>🔒 Gizli Mesajın Kilidini Açtın</h2>
-          <p id="secretText">bişeyler yaz ben sonra değiştireceğim</p>
+          <p id="secretText">Burası senin gizli köşen! 🔒 Hayatın ismin gibi hep neşeyle çağlasın Çağla... Senin gibi
+            kafa dengi, candan ve özel bir dostun varlığı her şeye değer. Yeni yaşında her şey o güzel gönlüne göre
+            olsun; seninle olan her anı, her muhabbeti çok seviyorum. Nice mutlu, sağlıklı ve başarı dolu senelere! İyi
+            ki varsın, iyi ki doğmuşsun! 🎉</p>
           <button id="closeSecretBtn" class="btn action">Kapat</button>
         </div>
       </div>
@@ -117,7 +125,8 @@
       <div class="container yippee-container">
         <h2 class="section-title">YIPPEEEEEEEEEEEEEE! 🎉</h2>
         <div class="interactive-area" style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
-          <iframe width="110" height="200" src="https://www.myinstants.com/instant/yippeeeeeeeeeeeeee-34261/embed/" frameborder="0" scrolling="no"></iframe>
+          <iframe width="110" height="200" src="https://www.myinstants.com/instant/yippeeeeeeeeeeeeee-34261/embed/"
+            frameborder="0" scrolling="no"></iframe>
         </div>
         <p class="hint">Butona bas ve enerjiyi hisset! ✨</p>
       </div>
@@ -127,7 +136,7 @@
     <section id="page7" class="page">
       <div class="container camera-container">
         <h2 class="section-title">Anı Yakala! 📸</h2>
-        
+
         <div id="cameraArea" class="camera-area">
           <video id="webcam" autoplay playsinline class="webcam-view"></video>
           <div class="camera-controls">
@@ -145,7 +154,7 @@
               <img id="capturedPhoto" src="" alt="Sen">
               <span>Sen</span>
             </div>
-            
+
             <div class="character-switcher">
               <button id="prevChar" class="char-nav-btn">❮</button>
               <div class="result-img-wrapper">
@@ -157,8 +166,198 @@
           </div>
           <button id="retakeBtn" class="btn outline" style="margin-top: 20px;">Tekrar Çek</button>
         </div>
-        
+
         <p class="hint">Kamera izni vermeyi unutma! ✨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 8: Karalama Defteri -->
+    <section id="page8" class="page">
+      <div class="container sketch-container">
+        <h2 class="section-title">Dijital Karalama Defteri 🎨</h2>
+        <p class="subtitle" style="text-align: center; margin-bottom: 20px;">Kayra'ya bir şeyler çiz ya da not bırak!
+        </p>
+
+        <div class="sketch-area">
+          <div id="sketchCursor" class="sketch-cursor"></div>
+          <canvas id="sketchpad"></canvas>
+          <div class="sketch-controls">
+            <div class="control-row">
+              <div class="tool-picker" id="toolPicker">
+                <button id="penTool" class="sketch-tool-btn active" title="Kalem">✏️</button>
+                <button id="eraserTool" class="sketch-tool-btn" title="Silgi">🧽</button>
+                <button id="fillTool" class="sketch-tool-btn" title="Boya Kovası">🪣</button>
+              </div>
+              <div class="color-picker" id="colorPicker">
+                <div class="color-dot active" style="background:#ffffff" data-color="#ffffff"></div>
+                <div class="color-dot" style="background:#ff4f7b" data-color="#ff4f7b"></div>
+                <div class="color-dot" style="background:#2fb07a" data-color="#2fb07a"></div>
+                <div class="color-dot" style="background:#ffd700" data-color="#ffd700"></div>
+                <div class="color-dot" style="background:#000000" data-color="#000000"></div>
+              </div>
+            </div>
+            <div class="control-row">
+              <div class="brush-size-control">
+                <span>Boyut:</span>
+                <input type="range" id="brushSize" min="1" max="50" value="5">
+                <span id="brushSizeDisplay">5px</span>
+              </div>
+              <div class="sketch-buttons">
+                <button id="clearSketchBtn" class="btn outline">Temizle</button>
+                <button id="sendSketchBtn" class="btn action">Kayra'ya Gönder 🚀</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="hint">Fırça rengini seçip çizmeye başla! ✨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 9: Kayra'ya Mesaj Gönder -->
+    <section id="page9" class="page">
+      <div class="container message-sending-container">
+        <h2 class="section-title">Kayra'ya Özel Not Bırak 💌</h2>
+        <p class="subtitle" style="text-align: center; margin-bottom: 20px;">İçinden geçenleri yaz, anında Kayra'nın
+          telefonuna düşsün!</p>
+
+        <div class="message-area-text">
+          <textarea id="specialMessageInput" placeholder="Mesajını buraya yazabilirsin..." maxlength="500"></textarea>
+          <div class="message-footer">
+            <span id="charCount">0 / 500</span>
+            <button id="sendMessageBtn" class="btn action">Mesajı Gönder 🕊️</button>
+          </div>
+        </div>
+        <p class="hint">Gönderdiğin her mesaj Kayra'ya sürpriz olacak! ✨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 10: İnteraktif Pasta -->
+    <section id="page10" class="page">
+      <div class="container cake-container">
+        <h2 class="section-title">Doğum Günü Pastası! 🎂</h2>
+        <p class="subtitle" style="text-align: center;">Dileğini tut ve mumları üfle/söndür!</p>
+
+        <div class="cake-area" id="cakeArea">
+          <div class="cake">
+            <div class="layer layer-top"></div>
+            <div class="layer layer-middle"></div>
+            <div class="layer layer-bottom"></div>
+            <div class="candles" id="candlesContainer">
+              <!-- JS ile mumlar gelecek -->
+            </div>
+          </div>
+        </div>
+
+        <div id="cakeWishMessage" class="wish-message hidden">
+          <h3>Dileğin Kabul Oldu! ✨💖</h3>
+          <p>Tüm hayallerin gerçek olsun Çağla!</p>
+        </div>
+
+        <p class="hint">Mumların üzerine fareyle gelerek söndür! 💨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 11: Tabuk Döner Oyunu -->
+    <section id="page11" class="page">
+      <div class="container game-container">
+        <h2 class="section-title">Tabuk Döner Yakalamace 🕹️</h2>
+        <div class="game-stats">
+          <div class="stat-item">Puan: <span id="gameScore">0</span></div>
+          <div class="stat-item">Hedef: 200</div>
+        </div>
+
+        <div class="game-area-wrapper" id="gameAreaWrapper">
+          <canvas id="gameCanvas"></canvas>
+          <div id="gameStartOverlay" class="game-overlay">
+            <button id="startGameBtn" class="btn action">Oyuna Başla 🚀</button>
+          </div>
+
+          <div id="gameCertificate" class="certificate hidden">
+            <div class="cert-inner">
+              <h3>📜 SÜPER ARKADAŞ SERTİFİKASI</h3>
+              <p>Bu sertifika, en lezzetli dönerleri büyük bir başarıyla toplayan</p>
+              <h4>CAAULAAAA</h4>
+              <p>adına düzenlenmiştir. Sen gerçek bir kahramansın! ✨</p>
+              <button id="closeCertBtn" class="btn outline">Geri Dön</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="hint">Karakteri (Apple Jack) Fare İle Sürükle!</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 12: Dijital Kazı Kazan -->
+    <section id="page12" class="page">
+      <div class="container scratch-container">
+        <h2 class="section-title">Hediye Kazı-Kazan! 🎫</h2>
+        <p class="subtitle" style="text-align: center;">Kuponları kazı, şansına ne çıkacak bak!</p>
+
+        <div class="scratch-cards-wrapper">
+          <div class="scratch-card-item">
+            <div class="scratch-card" id="scratchCard1">
+              <div class="card-reward">🎵🎤 Kayra'dan 1 Adet Beraber Zombie Dinleme Çeki🎉</div>
+              <canvas class="scratch-canvas" id="canvas1"></canvas>
+            </div>
+            <button class="btn action sm send-coupon"
+              data-reward="Kayra'dan 1 Adet Beraber Zombie Dinleme Çeki">Kayra'ya Çeki At
+              🚀</button>
+          </div>
+
+          <div class="scratch-card-item">
+            <div class="scratch-card" id="scratchCard2">
+              <div class="card-reward">🌯 Kayra'dan 1 Adet Bol Soslu Tabuk Döner Çeki</div>
+              <canvas class="scratch-canvas" id="canvas2"></canvas>
+            </div>
+            <button class="btn action sm send-coupon" data-reward="Kayra'dan 1 Adet Bol Soslu Tabuk Döner Çeki">Kayra'ya
+              Çeki At 🚀</button>
+          </div>
+
+          <div class="scratch-card-item">
+            <div class="scratch-card" id="scratchCard3">
+              <div class="card-reward">☕ Sınırsız Kahve & Muhabbet Çeki</div>
+              <canvas class="scratch-canvas" id="canvas3"></canvas>
+            </div>
+            <button class="btn action sm send-coupon" data-reward="Sınırsız Kahve & Muhabbet Çeki">Kayra'ya Çeki At
+              🚀</button>
+          </div>
+        </div>
+        <p class="hint">Fareyle veya parmağınla gri alanı kazı! ✨</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 13: Jukebox (Müzik Kutusu) -->
+    <section id="page13" class="page">
+      <div class="container jukebox-container">
+        <h2 class="section-title">Doğum Günü Jukebox 🎼</h2>
+
+        <div class="jukebox-player">
+          <div class="vinyl-record" id="vinylRecord">
+            <div class="vinyl-center"></div>
+          </div>
+
+          <div class="player-controls">
+            <h3 id="currentSongTitle">Highway to Hell</h3>
+            <p id="currentSongArtist">AC/DC</p>
+
+            <div class="audio-progress">
+              <div id="progressBar" class="progress-fill"></div>
+            </div>
+
+            <div class="player-buttons">
+              <button id="prevSong" class="player-btn">⏮️</button>
+              <button id="playPauseSong" class="player-btn play-main">▶️</button>
+              <button id="nextSong" class="player-btn">⏭️</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="playlist-area">
+          <h3>Çalma Listesi</h3>
+          <ul id="songList">
+            <!-- JS ile dolacak -->
+          </ul>
+        </div>
       </div>
     </section>
   </div>
@@ -175,7 +374,7 @@
   <img src="assets/images/rose2.png" id="roseHand" alt="Kırmızı Gül" />
 
   <!-- Dekoratif köşe görselleri -->
-  <img src="assets/images/pink-flower-bg.png" class="decor decor-top-left" alt="Pembe Çiçek" />
+  <img src="assets/images/pink-flower-bg.webp" class="decor decor-top-left" alt="Pembe Çiçek" />
   <img src="assets/images/donas-doner-tavuk-durum-c-1.webp" class="decor decor-bottom-right" alt="Desenli Arka Plan" />
 
   <!-- Büyük sayı overlay -->
@@ -203,16 +402,16 @@
   </div>
 
   <!-- Koşan Pony (Siyah silme için CSS Blend Mode kullanıldı) -->
-  <video id="ponyVideo" src="assets/images/applejack.mp4" playsinline muted loop class="pony-video"></video>
+  <video id="ponyVideo" src="assets/images/applejack.mp4" playsinline muted loop preload="none"
+    class="pony-video"></video>
 
   <!-- Ses: dosya yolları -->
-  <audio id="partyAudio" preload="auto" loop src="assets/audio/ACDC - Highway to Hell (Official Video).mp3"></audio>
-  <!-- rockAudio bırakıldı ama kullanılmıyor; istersen ileride crossfade ekleriz -->
-  <audio id="rockAudio" preload="auto" src="assets/audio/ACDC - Highway to Hell (Official Video).mp3"></audio>
-  <audio id="clickAudio" preload="auto" src="assets/audio/Buton tıklama sesi.mp3"></audio>
-  <audio id="ajAudio" preload="auto" src="assets/audio/Apple%20Jack%20ses%202.mp3"></audio>
-  <audio id="hedgehogAudio" preload="auto" src="assets/audio/Kirpi%20ses%20efekti.mp3"></audio>
+  <audio id="partyAudio" preload="none" loop src="assets/audio/ACDC - Highway to Hell (Official Video).mp3"></audio>
+  <audio id="clickAudio" preload="none" src="assets/audio/Buton tıklama sesi.mp3"></audio>
+  <audio id="ajAudio" preload="none" src="assets/audio/Apple%20Jack%20ses%202.mp3"></audio>
+  <audio id="hedgehogAudio" preload="none" src="assets/audio/Kirpi%20ses%20efekti.mp3"></audio>
 
   <script src="js/main.js"></script>
 </body>
+
 </html>
