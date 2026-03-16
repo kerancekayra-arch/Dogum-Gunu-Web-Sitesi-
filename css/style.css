@@ -727,6 +727,21 @@ p, h1, h2, h3, h4, h5, h6 {
   margin: 15px 0;
 }
 
+.cert-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.cert-buttons .btn {
+  min-width: 130px;
+  font-size: 0.95rem;
+  padding: 12px 20px;
+  border-radius: 12px;
+}
+
 @keyframes rotateIn {
   from {
     transform: scale(0) rotate(-180deg);

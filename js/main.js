@@ -982,6 +982,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- SAYFA 11: TABUK DÖNER OYUNU ---
   let gameRunning = false;
   let score = 0;
+  let gameInitialized = false; // Sadece bir kez init et — sertifika sayfa geçişinde kaybolmasın
+
   function initGame() {
     const canvas = document.getElementById('gameCanvas');
     const gCtx = canvas.getContext('2d');
@@ -989,10 +991,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const startOverlay = document.getElementById('gameStartOverlay');
     const startBtn = document.getElementById('startGameBtn');
     const cert = document.getElementById('gameCertificate');
-    cert.classList.add('hidden'); cert.style.display = 'none';
 
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width; canvas.height = rect.height;
+    // İlk kez açılıyorsa canvas boyutlandır ve listener'ları ekle
+    if (!gameInitialized) {
+      gameInitialized = true;
+      cert.classList.add('hidden'); cert.style.display = 'none';
+
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width; canvas.height = rect.height;
+    }
+    // Sertifika gösteriliyorsa dokunma — sayfa geçişinden dönünce hâlâ görünsün
+    // (sadece ilk açılışta gizlendi)
 
     let player = { x: canvas.width / 2 - 30, y: canvas.height - 80, w: 60, h: 60 };
     let items = [];
@@ -1031,30 +1040,56 @@ document.addEventListener('DOMContentLoaded', () => {
       animationId = requestAnimationFrame(draw);
     }
 
-    function endGame(win) {
-      gameRunning = false; cancelAnimationFrame(animationId);
-      if (win) { cert.classList.remove('hidden'); cert.style.display = 'flex'; startConfettiBurst(5000); }
-    }
-
     let spawnerInterval;
-    startBtn.onclick = () => {
-      if (gameRunning) return;
-      cert.classList.add('hidden'); score = 0; scoreEl.textContent = score; items = []; gameRunning = true;
+
+    function startNewGame() {
+      cert.classList.add('hidden'); cert.style.display = 'none';
       startOverlay.style.display = 'none';
+      score = 0; scoreEl.textContent = score; items = []; gameRunning = true;
       if (animationId) cancelAnimationFrame(animationId);
       draw();
       if (spawnerInterval) clearInterval(spawnerInterval);
       spawnerInterval = setInterval(() => { if (!gameRunning) clearInterval(spawnerInterval); else spawnItem(); }, 1000);
-    };
+    }
+
+    function endGame(win) {
+      gameRunning = false; cancelAnimationFrame(animationId);
+      if (spawnerInterval) clearInterval(spawnerInterval);
+      if (win) { cert.classList.remove('hidden'); cert.style.display = 'flex'; startConfettiBurst(5000); }
+    }
+
+    // Listener'ları sadece bir kez ekle
+    if (!startBtn._listenerAdded) {
+      startBtn._listenerAdded = true;
+      startBtn.onclick = () => { if (gameRunning) return; startNewGame(); };
+    }
+
+    const replayBtn = document.getElementById('replayGameBtn');
+    if (replayBtn && !replayBtn._listenerAdded) {
+      replayBtn._listenerAdded = true;
+      replayBtn.onclick = () => startNewGame();
+    }
+
+    const closeCertBtn = document.getElementById('closeCertBtn');
+    if (closeCertBtn && !closeCertBtn._listenerAdded) {
+      closeCertBtn._listenerAdded = true;
+      closeCertBtn.onclick = () => {
+        cert.classList.add('hidden'); cert.style.display = 'none';
+        startOverlay.style.display = 'flex';
+      };
+    }
 
     const handleMove = (e) => {
       const r = canvas.getBoundingClientRect();
       const clientX = e.clientX || (e.touches && e.touches[0].clientX);
       player.x = Math.max(0, Math.min(clientX - r.left - player.w / 2, canvas.width - player.w));
     };
-    canvas.addEventListener('mousemove', handleMove);
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); handleMove(e); }, { passive: false });
-    document.getElementById('closeCertBtn').onclick = () => { cert.classList.add('hidden'); cert.style.display = 'none'; };
+
+    if (!canvas._listenerAdded) {
+      canvas._listenerAdded = true;
+      canvas.addEventListener('mousemove', handleMove);
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); handleMove(e); }, { passive: false });
+    }
   }
 
   // --- SAYFA 12: KAZI KAZAN ---
@@ -1104,8 +1139,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let jukeboxInitialized = false;
 
   function initJukebox() {
-    if (jukeboxInitialized) return; // Tekrar tekrar listener eklemeyi önle
+    if (jukeboxInitialized) return;
     jukeboxInitialized = true;
+
+    // Jukebox kendi ses elementini kullanır — partyAudio'ya (Highway to Hell butonu) hiç dokunmaz
+    const jbAudio = document.getElementById('jukeboxAudio');
 
     const songListEl = document.getElementById('songList');
     const currentTitle = document.getElementById('currentSongTitle');
@@ -1125,12 +1163,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let songIndex = 0;
+    let jbPlaying = false;
 
     function loadSong(index) {
       const song = songs[index];
       currentTitle.textContent = song.title;
       currentArtist.textContent = song.artist;
-      partyAudio.src = song.src;
+      jbAudio.src = song.src;
       document.querySelectorAll('#songList li').forEach((li, i) => li.classList.toggle('active', i === index));
     }
 
@@ -1143,29 +1182,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function playSong() {
-      partyAudio.play(); musicState = 'playing';
-      musicToggle.textContent = 'Müziği Durdur'; playBtn.textContent = '⏸️';
+      jbAudio.play().catch(e => console.warn('Jukebox play hatası:', e));
+      jbPlaying = true;
+      playBtn.textContent = '⏸️';
       vinyl.classList.add('playing');
     }
     function pauseSong() {
-      partyAudio.pause(); musicState = 'stopped';
-      musicToggle.textContent = 'Müziği Başlat'; playBtn.textContent = '▶️';
+      jbAudio.pause();
+      jbPlaying = false;
+      playBtn.textContent = '▶️';
       vinyl.classList.remove('playing');
     }
 
-    playBtn.onclick = () => musicState === 'playing' ? pauseSong() : playSong();
+    playBtn.onclick = () => jbPlaying ? pauseSong() : playSong();
     document.getElementById('prevSong').onclick = () => { songIndex = (songIndex - 1 + songs.length) % songs.length; loadSong(songIndex); playSong(); };
     document.getElementById('nextSong').onclick = () => { songIndex = (songIndex + 1) % songs.length; loadSong(songIndex); playSong(); };
 
-    // 'ended' listener — sadece bir kez eklenir
-    partyAudio.addEventListener('ended', () => {
+    jbAudio.addEventListener('ended', () => {
       songIndex = (songIndex + 1) % songs.length;
       loadSong(songIndex); playSong();
     });
 
-    partyAudio.ontimeupdate = () => {
-      if (partyAudio.duration) {
-        progressBar.style.width = (partyAudio.currentTime / partyAudio.duration * 100) + '%';
+    jbAudio.ontimeupdate = () => {
+      if (jbAudio.duration) {
+        progressBar.style.width = (jbAudio.currentTime / jbAudio.duration * 100) + '%';
       }
     };
 
