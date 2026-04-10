@@ -339,6 +339,25 @@ p, h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.rainDoner {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  z-index: 15004;
+  pointer-events: none;
+  animation: donerRainAnim 4s linear forwards;
+}
+
+@keyframes donerRainAnim {
+  from {
+    transform: translateY(-100px) rotate(0deg);
+  }
+  to {
+    transform: translateY(120vh) rotate(360deg);
+  }
+}
+
 #rainbowFlash {
   position: fixed;
   inset: 0;
@@ -517,15 +536,18 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   display: none;
-  /* Varsayılan kapalı */
   overflow-y: auto;
   background: transparent;
   transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.6s ease;
 }
 
+/* Aktif olmayan sayfalardaki tüm CSS animasyonları durdur */
+.page:not(.active):not(.slide-in-right):not(.slide-in-left) * {
+  animation-play-state: paused !important;
+}
+
 .page.active {
   display: block;
-  /* Flex yerine block yaparak orijinal container yapısını koruyalım */
   opacity: 1;
   z-index: 10;
 }
@@ -637,6 +659,18 @@ p, h1, h2, h3, h4, h5, h6 {
   border-radius: 50% 50% 20% 20%;
   animation: flicker 0.6s infinite alternate;
   box-shadow: 0 0 15px #ff4500;
+  transition: opacity 0.2s ease;
+}
+
+/* Ateş söndüğünde - HEM fare HEM mikrofon için */
+.flame.hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  animation: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  box-shadow: none !important;
 }
 
 @keyframes flicker {
@@ -656,7 +690,6 @@ p, h1, h2, h3, h4, h5, h6 {
   background: rgba(255, 255, 255, 0.1);
   padding: 20px;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
   animation: scaleUp 0.5s ease;
 }
 
@@ -810,7 +843,6 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   max-width: 450px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
 }
 
 .vinyl-record {
@@ -931,7 +963,6 @@ p, h1, h2, h3, h4, h5, h6 {
   gap: 20px;
   width: 100%;
   max-width: 600px;
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1140,7 +1171,6 @@ p, h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   z-index: 1000;
   border-radius: 10px;
-  backdrop-filter: blur(5px);
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -1158,35 +1188,74 @@ p, h1, h2, h3, h4, h5, h6 {
   right: 20px;
 }
 
-/* Sayfa 2: Fotoğraf Galerisi */
+/* Sayfa 2: 3D Polaroid Galeri */
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  display: flex !important;
+  position: relative;
   width: 100%;
-  max-width: 1000px;
-  margin-top: 30px;
+  height: 600px; /* Biraz yükseltildi */
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px; /* Derinlik hissi artırıldı */
+  transform-style: preserve-3d;
+  margin-top: 50px;
+  overflow: visible !important;
 }
 
 .photo-item {
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
+  position: absolute;
+  width: 200px;
   background: white;
-  padding: 10px;
+  padding: 10px 10px 30px 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+  transform-style: preserve-3d;
+  user-select: none;
+  /* JavaScript tarafından atanan değeri kullan */
+  transform: var(--base-transform, scale(0.1));
 }
 
 .photo-item:hover {
-  transform: rotate(3deg) scale(1.05);
+  /* Mevcut transformu korur ve üzerine ekler */
+  transform: var(--base-transform) translateZ(100px) rotateX(-5deg) scale(1.1) !important;
+  z-index: 10000 !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
 }
 
 .photo-item img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 0; 
+  pointer-events: none;
+}
+
+.zoom-btn {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--mars-green);
+  border: none;
+  color: #05120a;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  opacity: 0.9;
+  box-shadow: 0 4px 10px rgba(47, 176, 122, 0.2);
+}
+
+.zoom-btn:hover {
+  transform: translateX(-50%) scale(1.1);
+  opacity: 1;
+  background: #36c089;
+  box-shadow: 0 0 15px rgba(47, 176, 122, 0.4);
 }
 
 /* Sayfa 3: Kelime Listesi */
@@ -1386,7 +1455,6 @@ p, h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   font-size: 1.2rem;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
 }
 
 .char-nav-btn:hover {
@@ -1716,3 +1784,443 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .hint { text-align: center; width: 100%; display: block; margin-top: 15px; }
+
+/* --- SAYFA 14: ZAMAN KAPSÜLÜ --- */
+.capsule-container {
+  text-align: center;
+  max-width: 600px !important;
+}
+
+.capsule-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+
+#capsuleInput {
+  width: 100%;
+  height: 150px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px dashed var(--mars-green);
+  border-radius: 12px;
+  color: white;
+  padding: 15px;
+  margin: 15px 0;
+  font-family: inherit;
+  resize: none;
+  font-size: 1.1rem;
+}
+
+#capsuleInput:focus {
+  border-style: solid;
+  outline: none;
+  box-shadow: 0 0 15px rgba(47, 176, 122, 0.3);
+}
+
+.capsule-locked-timer {
+  font-size: 2rem;
+  color: var(--neon-pink);
+  margin-top: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 79, 123, 0.5);
+}
+
+.lock-icon {
+  font-size: 5rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 20px var(--neon-pink));
+}
+
+/* --- SAYFA 15: YAŞAM İSTATİSTİKLERİ --- */
+.stats-container {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+}
+
+.life-counter-main {
+  background: rgba(47, 176, 122, 0.1);
+  border: 1px solid var(--mars-green);
+  padding: 30px;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 30px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.stat-big {
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: var(--mars-green);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(47, 176, 122, 0.4);
+}
+
+.stat-big label {
+  display: block;
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 8px;
+  margin-top: 5px;
+}
+
+.stat-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-mini span:first-child {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.stat-mini span:last-child {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+}
+
+.fun-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+.fun-stat.card {
+  padding: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+
+.fun-stat.card:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.07);
+}
+
+.fun-stat b {
+  color: var(--neon-pink);
+  font-size: 1.2rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* --- SAYFA 16: VOICE ART --- */
+.voice-art-container {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px !important;
+}
+
+.art-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  max-height: 500px;
+  aspect-ratio: 16/9;
+  background: #000;
+  border: 4px solid var(--mars-green);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.5), inset 0 0 30px rgba(47, 176, 122, 0.2);
+  margin-top: 20px;
+}
+
+#voiceArtCanvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  background: #000;
+}
+
+.canvas-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  transition: opacity 0.5s ease;
+}
+
+.canvas-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.voice-art-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+  .art-canvas-wrapper {
+    aspect-ratio: 1/1;
+  }
+  .voice-art-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* --- SAYFA 16: EMOTION ANALYZER V15 --- */
+.emotion-meter-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.emotion-label {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: white;
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+}
+
+#emotionStatus {
+  color: var(--mars-green);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(47, 176, 122, 0.4);
+  transition: all 0.3s ease;
+}
+
+.emotion-bar-bg {
+  width: 100%;
+  height: 30px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.emotion-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #2fb07a, #ffd700, #ff4f7b);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.emotion-score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.9);
+}
+
+/* --- SAYFA 10: CAKE MIC CONTROLS --- */
+.cake-mic-controls-wrapper {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  margin-top: 25px;
+  position: relative;
+  z-index: 999;
+}
+
+.mic-status-text {
+  color: var(--neon-pink);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px rgba(255, 79, 123, 0.3);
+  animation: pulse 1.5s infinite;
+}
+
+.candle-flicker {
+  animation: candleShake 0.15s infinite !important;
+}
+
+@keyframes candleShake {
+  0% { transform: rotate(0) translateX(0); }
+  25% { transform: rotate(3deg) translateX(1px); }
+  50% { transform: rotate(0) translateX(0); }
+  75% { transform: rotate(-3deg) translateX(-1px); }
+  100% { transform: rotate(0) translateX(0); }
+}
+
+/* === v18.0: HEARTBEAT DOOR INTERACTION === */
+.interactive-stat {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  perspective: 800px;
+  min-height: 120px;
+  animation: cardPulse 2s ease-in-out infinite;
+  transition: box-shadow 0.3s ease;
+}
+.interactive-stat:hover {
+  box-shadow: 0 0 25px rgba(255, 79, 123, 0.5), 0 0 50px rgba(255, 79, 123, 0.2);
+}
+@keyframes cardPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+.interactive-stat.open { animation: none; }
+
+/* Door panels */
+.stat-door {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(30,30,60,0.95), rgba(50,20,60,0.95));
+  backdrop-filter: blur(10px);
+  z-index: 3;
+  transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.stat-door.left {
+  left: 0;
+  transform-origin: left center;
+  border-radius: 15px 0 0 15px;
+}
+.stat-door.right {
+  right: 0;
+  transform-origin: right center;
+  border-radius: 0 15px 15px 0;
+}
+.interactive-stat.open .stat-door.left {
+  transform: rotateY(-110deg);
+}
+.interactive-stat.open .stat-door.right {
+  transform: rotateY(110deg);
+}
+
+/* Card content (visible on doors) */
+.card-content-inner {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+  font-size: 1.1rem;
+  text-align: center;
+  transition: opacity 0.4s ease;
+}
+.interactive-stat.open .card-content-inner {
+  opacity: 0;
+}
+
+/* Revealed message */
+.heart-revealed-msg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
+  padding: 15px;
+  text-align: center;
+}
+.interactive-stat.open .heart-revealed-msg {
+  opacity: 1;
+}
+.heart-revealed-msg p {
+  margin: 4px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.heart-revealed-msg .highlight {
+  color: #ff4f7b;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+.heart-revealed-msg .glow {
+  color: #fff;
+  text-shadow: 0 0 10px #ff4f7b, 0 0 20px #ff4f7b, 0 0 30px #ff4f7b;
+  font-size: 1.2rem;
+  margin-top: 10px;
+  animation: glowPulse 1.5s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { transform: scale(1); text-shadow: 0 0 10px #ff4f7b, 0 0 20px #ff4f7b; }
+  50% { transform: scale(1.1); text-shadow: 0 0 20px #ff4f7b, 0 0 40px #ff4f7b, 0 0 60px #ff4f7b; }
+}
+
+/* === v21.0: HEARTBEAT LOCKED MESSAGE & SHAKE ANIMATION === */
+.heartbeat-locked-msg {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  background: rgba(0,0,0,0.4);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 79, 123, 0.5);
+  border: 1px solid rgba(255, 79, 123, 0.3);
+  pointer-events: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Kilitli durum - sadece 🔒 */
+.heartbeat-locked-msg:has(:only-child) {
+  animation: brokenLock 1s ease-in-out infinite;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+@keyframes brokenLock {
+  0%, 100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+  25% { transform: translateX(-50%) rotate(-3deg) scale(1.05); }
+  50% { transform: translateX(-50%) rotate(3deg) scale(1); }
+  75% { transform: translateX(-50%) rotate(-2deg) scale(1.02); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}

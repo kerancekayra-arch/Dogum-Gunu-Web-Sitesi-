@@ -130,13 +130,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- SAYFA GEÇİŞ SİSTEMİ ---
   let currentPage = 1;
-  const totalPages = 13;
+  const totalPages = 16;
   const prevBtn = document.getElementById('prevPage');
   const nextBtn = document.getElementById('nextPage');
 
   function updatePageNavigation(direction) {
     const currentEl = document.getElementById(`page${currentPage}`);
-    if (currentPage === 7) stopCamera();
+    const leavingPage = currentPage;
+
+    // Sayfadan ayrılırken temizlik
+    if (leavingPage === 7) stopCamera();
+    if (leavingPage === 11 && gameRunning) {
+      // Oyun çalışıyorsa durdur
+      gameRunning = false;
+    }
+    if (leavingPage === 6) {
+      // iframe src'yi temizle — network/render yükü sıfırla
+      const iframe = document.querySelector('#page6 iframe');
+      if (iframe) iframe.src = 'about:blank';
+    }
+    if (leavingPage === 13) {
+      // Jukebox'tan ayrılınca pause
+      const jbAudio = document.getElementById('jukeboxAudio');
+      if (jbAudio && !jbAudio.paused) jbAudio.pause();
+    }
 
     if (direction === 'next') {
       currentEl.classList.add('slide-out-left');
@@ -151,6 +168,14 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(resizeSketchCanvas, 100);
     }
 
+    // Sayfa 6'ya girilince iframe'i yükle
+    if (currentPage === 6) {
+      const iframe = document.querySelector('#page6 iframe');
+      if (iframe && (!iframe.src || iframe.src === 'about:blank')) {
+        iframe.src = 'https://www.myinstants.com/instant/yippeeeeeeeeeeeeee-34261/embed/';
+      }
+    }
+
     nextEl.classList.remove('slide-out-left', 'slide-out-right');
     nextEl.classList.add(direction === 'next' ? 'slide-in-right' : 'slide-in-left');
     nextEl.style.display = 'flex';
@@ -161,10 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
       nextEl.classList.add('active');
       nextEl.classList.remove('slide-in-right', 'slide-in-left');
 
+      if (currentPage === 2) update3DGallery();
       if (currentPage === 10) initCake();
       if (currentPage === 11) initGame();
       if (currentPage === 12) initScratchCards();
       if (currentPage === 13) initJukebox();
+      if (currentPage === 14) initTimeCapsule();
+      if (currentPage === 15) updateLifeStats();
+      if (currentPage === 16) initVoiceArt();
     }, 50);
   }
 
@@ -270,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Sayfa 3: Kelime Listesi
-  const words = ["Neşeli", "Zeki", "Dost Canlısı", "Yaratıcı", "Eğlenceli", "Güçlü", "Eşsiz", "Harika", "Tabuk Döner", "Kahve", "Çikolata", "Kremalı Tatlı", "Profiterol", "Ressam"];
+  const words = ["Neşeli", "Zeki🧠🤓", "Dost Canlısı", "Yaratıcı", "Eğlenceli🥳🎉", "Güçlü", "Eşsiz", "Harika", "Tabuk Döner", "Kahve☕", "Çikolata🍫", "Kremalı Tatlı", "Profiterol", "Ressam🎨", "Çılgın😝😜🔥", "🖤🔥ABİGAİL🔥🖤",];
   const wordListContainer = document.getElementById('wordList');
   if (wordListContainer) {
     words.forEach(word => {
@@ -370,9 +399,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (photoGrid) photoGrid.addEventListener('click', (e) => {
-    if (e.target.tagName === 'IMG') {
-      const idx = Array.from(getAllGalleryImages()).indexOf(e.target);
-      if (idx !== -1) openLightbox(idx);
+    // Hem resme hem de "Büyült" butonuna tıklamayı yakala
+    if (e.target.tagName === 'IMG' || e.target.classList.contains('zoom-btn')) {
+      const photoItem = e.target.closest('.photo-item');
+      if (!photoItem) return;
+      
+      const allItems = Array.from(document.querySelectorAll('.photo-item'));
+      const index = allItems.indexOf(photoItem);
+      if (index !== -1) openLightbox(index);
     }
   });
 
@@ -536,13 +570,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // heartRain: DOM yerine CSS animasyonu — sayı 28→16
   function startHeartRain() {
     const container = document.getElementById('heartRain');
-    for (let i = 0; i < 16; i++) {
+    if (!container) return;
+    for (let i = 0; i < 30; i++) { // Sayı biraz artırıldı
       const h = document.createElement('div');
       h.className = 'rainHeart';
       h.style.left = Math.random() * 100 + '%';
       h.style.animationDuration = (2 + Math.random() * 3) + 's';
       container.appendChild(h);
       setTimeout(() => h.remove(), 5200);
+    }
+  }
+
+  function startDonerRain() {
+    const container = document.getElementById('heartRain'); // Kalp yağmuru container'ını paylaşabiliriz
+    if (!container) return;
+    for (let i = 0; i < 25; i++) {
+        const d = document.createElement('img');
+        d.src = 'assets/images/donas-doner-tavuk-durum-c-1.webp';
+        d.className = 'rainDoner';
+        d.style.left = Math.random() * 100 + '%';
+        d.style.animationDuration = (2 + Math.random() * 3) + 's';
+        d.style.animationDelay = (Math.random() * 2) + 's';
+        container.appendChild(d);
+        setTimeout(() => d.remove(), 6000);
     }
   }
 
@@ -952,13 +1002,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- SAYFA 10: PASTA ---
+  let cakeMicStream = null;
+
   function initCake() {
     const candlesContainer = document.getElementById('candlesContainer');
     const wishMessage = document.getElementById('cakeWishMessage');
+    const startMicBtn = document.getElementById('startCakeMicBtn');
+    const micStatus = document.getElementById('cakeMicStatus');
+
     if (!candlesContainer) return;
+
+    // Temizlik ve Başlangıç Durumu
     candlesContainer.innerHTML = '';
+    if (wishMessage) wishMessage.classList.add('hidden');
+    if (startMicBtn) {
+      startMicBtn.classList.remove('hidden');
+      startMicBtn.style.display = 'inline-block'; // Butonu kesin göster
+    }
+    if (micStatus) {
+      micStatus.classList.add('hidden');
+      micStatus.textContent = '';
+    }
+
     let blownCount = 0;
     const totalCandles = 5;
+    const candles = [];
+
+    // Mumları Yarat
     for (let i = 0; i < totalCandles; i++) {
       const candle = document.createElement('div');
       candle.className = 'candle';
@@ -967,15 +1037,102 @@ document.addEventListener('DOMContentLoaded', () => {
       const flame = document.createElement('div');
       flame.className = 'flame';
       candle.appendChild(flame);
-      candle.addEventListener('mouseover', () => {
+
+      const extinguish = () => {
         if (!flame.classList.contains('hidden')) {
-          flame.style.display = 'none'; flame.classList.add('hidden');
+          flame.classList.add('hidden');
+          flame.style.display = 'none';
           blownCount++;
-          if (blownCount === totalCandles) { startConfettiBurst(5000); wishMessage.classList.remove('hidden'); }
+          if (blownCount >= totalCandles) {
+            startConfettiBurst(5000);
+            if (wishMessage) wishMessage.classList.remove('hidden');
+            if (cakeMicStream) {
+              cakeMicStream.getTracks().forEach(t => t.stop());
+              cakeMicStream = null;
+            }
+            if (micStatus) micStatus.textContent = '🎉 Tüm mumlar söndü! Dileğin kabul oldu!';
+          }
         }
-      });
+      };
+
+      candle.addEventListener('mouseover', extinguish);
       candlesContainer.appendChild(candle);
+      candles.push({ flame, extinguish });
     }
+
+    // Mikrofon Kontrolü
+    if (startMicBtn) {
+      startMicBtn.onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          cakeMicStream = stream;
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const analyser = audioCtx.createAnalyser();
+          const source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
+          analyser.fftSize = 512;
+
+          startMicBtn.classList.add('hidden');
+          micStatus.classList.remove('hidden');
+
+          const timeDomainData = new Uint8Array(analyser.fftSize);
+          let blowCooldown = false;
+
+          const checkBlow = () => {
+            if (currentPage !== 10 || blownCount >= totalCandles) {
+              if (cakeMicStream) cakeMicStream.getTracks().forEach(t => t.stop());
+              return;
+            }
+
+            analyser.getByteTimeDomainData(timeDomainData);
+
+            // RMS (Ses Gücü) Ölçümü
+            let sumSquares = 0;
+            for (let i = 0; i < timeDomainData.length; i++) {
+              const normalized = (timeDomainData[i] - 128) / 128;
+              sumSquares += normalized * normalized;
+            }
+            const rms = Math.sqrt(sumSquares / timeDomainData.length);
+            const volume = Math.round(rms * 100);
+
+            // Canlı Geri Bildirim
+            micStatus.textContent = `💨 Ses Gücü: ${volume} | Söndürmek için 12+ gerekli!`;
+
+            // Hafif Üfleme: Titreme
+            if (volume > 6 && !blowCooldown) {
+              candles.forEach(c => {
+                if (!c.flame.classList.contains('hidden')) c.flame.classList.add('candle-flicker');
+              });
+            } else if (!blowCooldown) {
+              candles.forEach(c => c.flame.classList.remove('candle-flicker'));
+            }
+
+            // Sert Üfleme: Sıralı Söndürme
+            if (volume > 12 && !blowCooldown) {
+              blowCooldown = true;
+              const alive = candles.filter(c => !c.flame.classList.contains('hidden'));
+              const shuffled = [...alive].sort(() => Math.random() - 0.5);
+
+              shuffled.forEach((c, idx) => {
+                setTimeout(() => {
+                  c.extinguish();
+                }, idx * 250);
+              });
+
+              setTimeout(() => { blowCooldown = false; }, (shuffled.length * 250) + 500);
+            }
+
+            requestAnimationFrame(checkBlow);
+          };
+          requestAnimationFrame(checkBlow);
+
+        } catch (err) {
+          alert("Mikrofon izni gerekli! 🎙️");
+          console.error(err);
+        }
+      };
+    }
+
   }
   initCake();
 
@@ -1210,6 +1367,442 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     loadSong(0);
+  }
+
+  // --- SAYFA 2: 3D POLAROID GALERİ ---
+  let galleryRotation = 0;
+  let isDraggingGallery = false;
+  let startX = 0;
+
+  function update3DGallery() {
+    const items = document.querySelectorAll('.photo-item');
+    if (!items.length) return;
+    const radius = Math.min(window.innerWidth * 0.45, 420);
+    items.forEach((item, i) => {
+      const angle = (i / items.length) * Math.PI * 2 + galleryRotation;
+      const x = Math.sin(angle) * radius;
+      const z = Math.cos(angle) * radius;
+      const rotY = angle * (180 / Math.PI);
+      
+      const transformValue = `translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg)`;
+      item.style.setProperty('--base-transform', transformValue);
+      item.style.zIndex = Math.round(z + radius);
+      
+      // Arkada kalanları daha sönük yap
+      const opacity = (z + radius) / (radius * 2) * 0.7 + 0.3;
+      item.style.opacity = opacity;
+      
+      item.style.pointerEvents = z < -150 ? 'none' : 'auto';
+    });
+  }
+
+  window.addEventListener('mousedown', (e) => {
+    if (currentPage === 2) {
+      isDraggingGallery = true;
+      startX = e.clientX;
+    }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (currentPage === 2 && isDraggingGallery) {
+      const dx = e.clientX - startX;
+      galleryRotation += dx * 0.005;
+      startX = e.clientX;
+      update3DGallery();
+    }
+  });
+
+  window.addEventListener('mouseup', () => isDraggingGallery = false);
+  
+  // Dokunmatik desteği
+  window.addEventListener('touchstart', (e) => {
+    if (currentPage === 2) {
+      isDraggingGallery = true;
+      startX = e.touches[0].clientX;
+    }
+  });
+
+  window.addEventListener('touchmove', (e) => {
+    if (currentPage === 2 && isDraggingGallery) {
+      const dx = e.touches[0].clientX - startX;
+      galleryRotation += dx * 0.008;
+      startX = e.touches[0].clientX;
+      update3DGallery();
+    }
+  });
+
+  window.addEventListener('touchend', () => isDraggingGallery = false);
+  
+  // Ekran her döndüğünde galeriyi güncelle
+  window.addEventListener('resize', () => {
+    if (currentPage === 2) update3DGallery();
+  });
+
+  // --- EASTER EGGS (GİZLİ SÜRPRİZLER) ---
+  let keyBuffer = "";
+  window.addEventListener('keydown', (e) => {
+    keyBuffer += e.key.toUpperCase();
+    if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(keyBuffer.length - 20);
+
+    if (keyBuffer.endsWith("TABUK")) {
+      startDonerRain();
+      startConfettiBurst(4000);
+      keyBuffer = "";
+    } else if (keyBuffer.endsWith("KAYRA")) {
+      startHeartRain();
+      showMegaHeart();
+      keyBuffer = "";
+    } else if (keyBuffer.endsWith("AÇILSUSAMAÇIL") || keyBuffer.endsWith("ACILSUSAMACIL")) {
+      // Zaman Kapsülü Hilesi: Kilidi zorla aç ve mesajı göster
+      const saved = localStorage.getItem('birthdayCapsule');
+      if (saved) {
+        const data = JSON.parse(saved);
+        data.unlockDate = Date.now() - 1000; // Kilidi geçmişe al (yani hemen aç)
+        localStorage.setItem('birthdayCapsule', JSON.stringify(data));
+        
+        if (window.capsuleTimer) clearInterval(window.capsuleTimer);
+        initTimeCapsule();
+        startConfettiBurst(2000);
+        alert("🪄 Kilidi zorla açtık! Artık notu okuyabilirsin. ✨");
+      } else {
+        alert("Henüz kilitlenmiş bir mesaj yok! 🤷‍♂️");
+      }
+      keyBuffer = "";
+    }
+  });
+
+  // --- SAYFA 15: YAŞAM İSTATİSTİKLERİ ---
+  const birthDate = new Date(2012, 3, 9, 11, 30); // 9 Nisan 2012, 11:30
+
+  function updateLifeStats() {
+    const now = new Date();
+    const diff = now - birthDate;
+    
+    if (diff < 0) return;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hoursTotal = Math.floor(diff / (1000 * 60 * 60));
+    const minutesTotal = Math.floor(diff / (1000 * 60));
+    const secondsTotal = Math.floor(diff / 1000);
+
+    const dEl = document.getElementById('lifeDays');
+    const hEl = document.getElementById('lifeHours');
+    const mEl = document.getElementById('lifeMinutes');
+    const sEl = document.getElementById('lifeSeconds');
+
+    if (dEl) dEl.textContent = days.toLocaleString();
+    if (hEl) hEl.textContent = hoursTotal.toLocaleString();
+    if (mEl) mEl.textContent = minutesTotal.toLocaleString();
+    if (sEl) sEl.textContent = secondsTotal.toLocaleString();
+
+    // Eğlenceli istatistikler
+    const water = (days * 1.8).toFixed(1);
+    const sleep = Math.floor(days * 0.33);
+    const heart = (minutesTotal * 75).toLocaleString();
+    const breath = (minutesTotal * 14).toLocaleString();
+
+    const sw = document.getElementById('statWater');
+    const ss = document.getElementById('statSleep');
+    const sh = document.getElementById('statHeart');
+    const sb = document.getElementById('statBreath');
+
+    if (sw) sw.textContent = water;
+    if (ss) ss.textContent = sleep;
+    if (sh) sh.textContent = heart;
+    if (sb) sb.textContent = breath;
+  }
+
+  // Her saniye güncelle
+  setInterval(() => {
+    if (currentPage === 15) updateLifeStats();
+  }, 1000);
+
+  // --- SAYFA 14: ZAMAN KAPSÜLÜ ---
+  function initTimeCapsule() {
+    const writer = document.getElementById('capsuleWriter');
+    const locked = document.getElementById('capsuleLocked');
+    const opened = document.getElementById('capsuleOpened');
+    const input = document.getElementById('capsuleInput');
+    const lockBtn = document.getElementById('lockCapsuleBtn');
+    const countdownEl = document.getElementById('capsuleCountdown');
+    const msgDisplay = document.getElementById('capsuleMessageDisplay');
+    const resetBtn = document.getElementById('resetCapsuleBtn');
+
+    if (!writer) return;
+
+    const saved = localStorage.getItem('birthdayCapsule');
+
+    if (!saved) {
+      writer.classList.remove('hidden');
+      locked.classList.add('hidden');
+      opened.classList.add('hidden');
+    } else {
+      const data = JSON.parse(saved);
+      const now = Date.now();
+      
+      if (now < data.unlockDate) {
+        writer.classList.add('hidden');
+        locked.classList.remove('hidden');
+        opened.classList.add('hidden');
+        updateCapsuleCountdown(data.unlockDate, countdownEl);
+      } else {
+        writer.classList.add('hidden');
+        locked.classList.add('hidden');
+        opened.classList.remove('hidden');
+        msgDisplay.textContent = data.message;
+      }
+    }
+
+    lockBtn.onclick = () => {
+      const msg = input.value.trim();
+      if (!msg) { alert("Lütfen gelecekteki kendine bir not yaz! ✍️"); return; }
+      
+      const unlockDate = Date.now() + (365 * 24 * 60 * 60 * 1000);
+      const data = { message: msg, unlockDate: unlockDate };
+      localStorage.setItem('birthdayCapsule', JSON.stringify(data));
+      startConfettiBurst(3000);
+      initTimeCapsule();
+    };
+
+    resetBtn.onclick = () => {
+      if (confirm("Bu mesajı silip yeni bir tane yazmak istediğine emin misin?")) {
+        localStorage.removeItem('birthdayCapsule');
+        initTimeCapsule();
+      }
+    };
+  }
+
+  function updateCapsuleCountdown(unlockDate, el) {
+    if (window.capsuleTimer) clearInterval(window.capsuleTimer);
+    window.capsuleTimer = setInterval(() => {
+      const now = Date.now();
+      const diff = unlockDate - now;
+      if (diff <= 0) {
+        clearInterval(window.capsuleTimer);
+        initTimeCapsule();
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      el.textContent = `${days}g ${hours}s ${mins}d ${secs}s`;
+    }, 1000);
+  }
+
+  // İlk yüklemede durum kontrolü
+  initTimeCapsule();
+
+  // --- SAYFA 16: VOICE ART ---
+  let voiceArtInited = false;
+  let audioContext = null;
+  let analyser = null;
+  let microphone = null;
+  let voiceArtAnimationId = null;
+
+  function initVoiceArt() {
+    const canvas = document.getElementById('voiceArtCanvas');
+    const startBtn = document.getElementById('startVoiceArtBtn');
+    const overlay = document.getElementById('voiceArtOverlay');
+    const saveBtn = document.getElementById('saveVoiceArtBtn');
+    const clearBtn = document.getElementById('clearVoiceArtBtn');
+    
+    if (!canvas || voiceArtInited) {
+      if(canvas) resizeArtCanvas(); 
+      return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    resizeArtCanvas();
+
+    window.addEventListener('resize', resizeArtCanvas);
+
+    startBtn.onclick = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 256;
+
+        overlay.classList.add('hidden');
+        saveBtn.classList.remove('hidden');
+        clearBtn.classList.remove('hidden');
+
+        startDrawing(ctx, analyser, canvas);
+        voiceArtInited = true;
+      } catch (err) {
+        alert("Mikrofon izni gerekli! 🎙️");
+        console.error(err);
+      }
+    };
+
+    saveBtn.onclick = () => {
+      const dataUrl = canvas.toDataURL('image/png');
+      
+      // Cihaza indir
+      const link = document.createElement('a');
+      link.download = `Cagla-Ses-Sanati-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+      
+      // Telegram'a gönder
+      sendPhotoToTelegram(dataUrl, "🎨 Çağla'nın ses sanatı eseri kaydedildi! 🎙️✨");
+      
+      startConfettiBurst(2000);
+    };
+
+    clearBtn.onclick = () => {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+  }
+
+  function resizeArtCanvas() {
+    const canvas = document.getElementById('voiceArtCanvas');
+    if (canvas) {
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    }
+  }
+
+  let currentJoyLevel = 0;
+
+  function startDrawing(ctx, analyser, canvas) {
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    
+    const statusEl = document.getElementById('emotionStatus');
+    const barFill = document.getElementById('emotionBarFill');
+    const scoreText = document.getElementById('emotionScoreText');
+
+    function draw() {
+      if (currentPage !== 16) {
+        cancelAnimationFrame(voiceArtAnimationId);
+        return;
+      }
+
+      voiceArtAnimationId = requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+
+      // --- DUYGU ANALİZİ (V15) ---
+      let sum = 0;
+      let weightedSum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += dataArray[i];
+        weightedSum += dataArray[i] * i;
+      }
+      const avgVolume = sum / bufferLength;
+      const centroid = weightedSum / sum || 0;
+      
+      // Gürültü Eşiği (Noise Threshold): Fan sesi gibi düşük sesleri görmezden gel
+      const noiseThreshold = 35; 
+      let targetJoy = 0;
+      
+      if (avgVolume > noiseThreshold) {
+        // Sadece eşiğin üzerindeki sesleri neşe puanına dönüştür
+        targetJoy = ((avgVolume - noiseThreshold) * 0.9) + (centroid * 4.8);
+      }
+      
+      targetJoy = Math.min(100, Math.max(0, targetJoy));
+      currentJoyLevel = (currentJoyLevel * 0.92) + (targetJoy * 0.08); // Daha yumuşak geçiş
+      
+      const score = Math.round(currentJoyLevel);
+      if (barFill) barFill.style.width = score + '%';
+      if (scoreText) scoreText.textContent = '%' + score;
+      
+      if (statusEl) {
+        if (score < 15) { statusEl.textContent = "Sessiz... 🧘‍♀️"; statusEl.style.color = "#ccc"; }
+        else if (score < 45) { statusEl.textContent = "Sakin & Pozitif ✨"; statusEl.style.color = "#2fb07a"; }
+        else if (score < 78) { statusEl.textContent = "Çok Neşeli & Mutlu! 😄"; statusEl.style.color = "#ffd700"; }
+        else { statusEl.textContent = "Süper Heyecanlı! 🔥🚀"; statusEl.style.color = "#ff4f7b"; }
+      }
+
+      // --- ÇİZİM (Voice Art) ---
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i];
+        if (barHeight > 30) {
+          // Renkler artık neşe seviyesine (currentJoyLevel) göre değişiyor
+          const hue = (currentJoyLevel * 2) + (i / bufferLength) * 100;
+          const sat = 50 + (currentJoyLevel / 2); // Neşe arttıkça renk doygunluğu artar
+          
+          ctx.beginPath();
+          ctx.strokeStyle = `hsl(${hue}, ${sat}%, 60%)`;
+          ctx.lineWidth = barHeight / 25;
+
+          const x = Math.random() * canvas.width;
+          const y = (canvas.height / 2) + (Math.random() - 0.5) * (barHeight * 2.5);
+          
+          ctx.arc(x, y, barHeight / 12, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+    }
+    draw();
+  }
+
+  // --- SAYFA 15: HEARTBEAT DOOR İNTERAKSİYONU (KİLİTLİ - "Linger" ŞİFRESİ) ---
+  const heartbeatCard = document.getElementById('heartbeatStatCard');
+  let heartbeatUnlocked = false;
+  let lingerBuffer = "";
+  let isOpen = false;
+  
+  if (heartbeatCard) {
+    // Başlangıçta kilitli - gösterge mesajı ekle
+    const lockedMsg = document.createElement('div');
+    lockedMsg.className = 'heartbeat-locked-msg';
+    lockedMsg.innerHTML = '🔒';
+    heartbeatCard.appendChild(lockedMsg);
+    
+    // Kalp mesajını gizle (başlangıçta)
+    const heartMsg = heartbeatCard.querySelector('.heart-revealed-msg');
+    if (heartMsg) heartMsg.style.opacity = '0';
+    
+    // Tıklama - kilidi açıksa toggle yap, kapalıysa sallan
+    heartbeatCard.addEventListener('click', () => {
+      if (!heartbeatUnlocked) {
+        // Kilitli - sallanma efekti
+        heartbeatCard.style.animation = 'shake 0.5s ease';
+        setTimeout(() => heartbeatCard.style.animation = '', 500);
+        return;
+      }
+      
+      // Kilit açık - toggle yap (aç/kapat)
+      isOpen = !isOpen;
+      if (isOpen) {
+        heartbeatCard.classList.add('open');
+        if (heartMsg) heartMsg.style.opacity = '1';
+        startConfettiBurst(3000);
+        const clickSnd = document.getElementById('clickAudio');
+        if (clickSnd) clickSnd.play().catch(e => console.warn(e));
+        
+        // İlk açılışta mesajı tamamen kaldır
+        const lockMsg = heartbeatCard.querySelector('.heartbeat-locked-msg');
+        if (lockMsg) lockMsg.remove();
+      } else {
+        heartbeatCard.classList.remove('open');
+        if (heartMsg) heartMsg.style.opacity = '0';
+      }
+    });
+    
+    // Klavye dinleyici - "Linger" yazınca kilidi aç (ama kapak açılmaz)
+    document.addEventListener('keydown', (e) => {
+      lingerBuffer += e.key;
+      if (lingerBuffer.length > 6) lingerBuffer = lingerBuffer.slice(-6);
+      
+      if (lingerBuffer.toLowerCase() === 'linger' && !heartbeatUnlocked) {
+        heartbeatUnlocked = true;
+        
+        // Kilit mesajını değiştir - artık açılabilir
+        const lockMsg = heartbeatCard.querySelector('.heartbeat-locked-msg');
+        if (lockMsg) lockMsg.innerHTML = '🔓 <span>Açmak için tıkla</span>';
+      }
+    });
   }
 
 });

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🎉 Doğum Günün Kutlu Olsun — CAAULAAAA</title>
+  <title>🎉 Doğum Günün Kutlu Olsun v21.0 — CAAULAAAA</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -57,15 +57,60 @@
         <h2 class="section-title">Anılar & Fotoğraflar</h2>
         <div class="photo-grid" id="photoGrid">
           <!-- Fotoğraflar buraya JS ile veya manuel gelecek -->
-          <div class="photo-item"><img src="assets/images/donas-doner-tavuk-durum-c-1.webp" alt="Anı 1" loading="lazy">
+          <div class="photo-item">
+            <img src="assets/images/donas-doner-tavuk-durum-c-1.webp" alt="Anı 1" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
           </div>
-          <div class="photo-item"><img src="assets/images/prit.jpg" alt="Anı 2" loading="lazy"></div>
-          <div class="photo-item"><img src="assets/images/portakal suyu.jpg" alt="Anı 3" loading="lazy"></div>
-          <div class="photo-item"><img src="assets/images/mavi.webp" alt="Anı 4" loading="lazy"></div>
-          <div class="photo-item"><img src="assets/images/profiterol.jpg" alt="Anı 5" loading="lazy"></div>
-          <div class="photo-item"><img src="assets/images/magnolia.webp" alt="Anı 6" loading="lazy"></div>
-          <div class="photo-item"><img src="assets/images/whatsapp konusması.jpeg" alt="Anı 7" loading="lazy"></div>
+          <div class="photo-item">
+            <img src="assets/images/prit.jpg" alt="Anı 2" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/portakal suyu.jpg" alt="Anı 3" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/mavi.webp" alt="Anı 4" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/profiterol.jpg" alt="Anı 5" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/magnolia.webp" alt="Anı 6" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/whatsapp konusması.jpeg" alt="Anı 7" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/biressam.jpeg" alt="Anı 8" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/caglahoca.jpeg" alt="Anı 9" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/rakkun.jpeg" alt="Anı 10" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/listedeyimhe.jpeg" alt="Anı 11" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/spotifyyy.jpeg" alt="Anı 12" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
+          <div class="photo-item">
+            <img src="assets/images/gazete.jpeg" alt="Anı 13" loading="lazy">
+            <button class="zoom-btn">🔍 Büyült</button>
+          </div>
         </div>
+        <p class="hint">Fotoğrafları fareyle sağa-sola sürükleyerek döndürebilirsin! ✨</p>
       </div>
     </section>
 
@@ -125,8 +170,7 @@
       <div class="container yippee-container">
         <h2 class="section-title">YIPPEEEEEEEEEEEEEE! 🎉</h2>
         <div class="interactive-area" style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
-          <iframe width="110" height="200" src="https://www.myinstants.com/instant/yippeeeeeeeeeeeeee-34261/embed/"
-            frameborder="0" scrolling="no"></iframe>
+          <iframe width="110" height="200" src="about:blank" frameborder="0" scrolling="no"></iframe>
         </div>
         <p class="hint">Butona bas ve enerjiyi hisset! ✨</p>
       </div>
@@ -248,12 +292,17 @@
           </div>
         </div>
 
+        <div class="cake-mic-controls-wrapper">
+          <button id="startCakeMicBtn" class="btn action">🎙️ Mikrofonla Üflemeyi Dene</button>
+          <div id="cakeMicStatus" class="mic-status-text hidden">Mikrofon Hazır! Üfle!</div>
+        </div>
+
         <div id="cakeWishMessage" class="wish-message hidden">
           <h3>Dileğin Kabul Oldu! ✨💖</h3>
           <p>Tüm hayallerin gerçek olsun Çağla!</p>
         </div>
 
-        <p class="hint">Mumların üzerine fareyle gelerek söndür! 💨</p>
+        <p class="hint">Mumları fareyle söndürebilir veya mikrofona üfleyebilirsin! ✨</p>
       </div>
     </section>
 
@@ -360,6 +409,96 @@
             <!-- JS ile dolacak -->
           </ul>
         </div>
+      </div>
+    </section>
+
+    <!-- Sayfa 14: Zaman Kapsülü -->
+    <section id="page14" class="page">
+      <div class="container capsule-container">
+        <h2 class="section-title">Geleceğe Not (Zaman Kapsülü) ⏳</h2>
+        <div id="capsuleWriter" class="capsule-box">
+          <p>Bugünkü kendine veya bir yıl sonraki kendine bir mesaj bırak...</p>
+          <textarea id="capsuleInput" placeholder="Sevgili ben, tam bir yıl geçti..."></textarea>
+          <button id="lockCapsuleBtn" class="btn action">Mesajı Geleceğe Kilitle 🔒</button>
+        </div>
+        <div id="capsuleLocked" class="capsule-box hidden">
+          <div class="lock-icon">🔒</div>
+          <h3>Mesajın Kilitlendi!</h3>
+          <p>Bu mesaj tam 365 gün sonra açılacak.</p>
+          <div id="capsuleCountdown" class="capsule-locked-timer"></div>
+        </div>
+        <div id="capsuleOpened" class="capsule-box hidden">
+          <h2>🔓 Zaman Kapsülü Açıldı!</h2>
+          <div id="capsuleMessageDisplay" class="message-card"></div>
+          <button id="resetCapsuleBtn" class="btn outline" style="margin-top:20px;">Yeni Not Yaz</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sayfa 15: Yaşam İstatistikleri -->
+    <section id="page15" class="page">
+      <div class="container stats-container">
+        <h2 class="section-title">Senin Harika Yolculuğun ✨</h2>
+        <div class="life-counter-main">
+          <div class="stat-big">
+            <span id="lifeDays">0</span>
+            <label>GÜN</label>
+          </div>
+          <div class="stat-grid-mini">
+            <div class="stat-mini"><span>Saat:</span><span id="lifeHours">0</span></div>
+            <div class="stat-mini"><span>Dakika:</span><span id="lifeMinutes">0</span></div>
+            <div class="stat-mini"><span>Saniye:</span><span id="lifeSeconds">0</span></div>
+          </div>
+        </div>
+        <div class="fun-stats-grid">
+          <div class="fun-stat card">🥤<br><span>~ <b id="statWater">0</b> Litre Su İçtin</span></div>
+          <div class="fun-stat card">😴<br><span>~ <b id="statSleep">0</b> Gün Uyudun</span></div>
+          <div class="fun-stat card interactive-stat" id="heartbeatStatCard">
+            <div class="heart-revealed-msg">
+              <p>Acaba bu</p>
+              <p class="highlight">kalp atışlarından</p>
+              <p>kaç tanesi</p>
+              <p class="highlight glow">bana attı? 💖</p>
+            </div>
+            <div class="stat-door left"></div>
+            <div class="stat-door right"></div>
+            <div class="card-content-inner">
+              💓<br><span>~ <b id="statHeart">0</b> Kalp Atışı</span>
+            </div>
+          </div>
+          <div class="fun-stat card">🌬️<br><span>~ <b id="statBreath">0</b> Nefes Aldın</span></div>
+        </div>
+        <p class="hint">9 Nisan 2012, 11:30'dan beri geçen zaman...</p>
+      </div>
+    </section>
+
+    <!-- Sayfa 16: Sesiyle Renk Saç (Voice Art) -->
+    <section id="page16" class="page">
+      <div class="container voice-art-container">
+        <h2 class="section-title">Sesiyle Renk Saç & Duygu Analizörü 🎨🎙️</h2>
+        <p class="subtitle">Sesinle neşeni ölç ve kendine özel bir tablo oluştur!</p>
+
+        <div class="emotion-meter-wrapper">
+          <div class="emotion-label">Neşe Seviyesi: <span id="emotionStatus">Sessiz... 🧘‍♀️</span></div>
+          <div class="emotion-bar-bg">
+            <div id="emotionBarFill" class="emotion-bar-fill"></div>
+            <span id="emotionScoreText" class="emotion-score-text">%0</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper art-canvas-wrapper">
+          <canvas id="voiceArtCanvas"></canvas>
+          <div id="voiceArtOverlay" class="canvas-overlay">
+            <button id="startVoiceArtBtn" class="btn action">🎙️ Sesimi Dinle, Ölç ve Çiz</button>
+          </div>
+        </div>
+
+        <div class="voice-art-controls">
+          <button id="saveVoiceArtBtn" class="btn action sm outline hidden">🖼️ Eserimi Kaydet</button>
+          <button id="clearVoiceArtBtn" class="btn action sm outline hidden">🧹 Tuvali Temizle</button>
+        </div>
+
+        <p class="hint">Ne kadar neşeli konuşursan, tablo o kadar renkli olur! Bu eseri senin için kaydedebiliriz. ✨</p>
       </div>
     </section>
   </div>
